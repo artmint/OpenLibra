@@ -29,6 +29,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     public interface OnBookSelectedListener {
         void onBookSelected(Book book);
     }
+
+    public BooksAdapter(Context context, OnBookSelectedListener onBookSelectedListener) {
+        this.context = context;
+        this.dataset = new ArrayList<>();
+        this.onBookSelectedListener = onBookSelectedListener;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
@@ -45,14 +52,37 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         Glide.with(context)
                 .load(b.getThumbail())
                 .into(holder.imageBook);
+
+        holder.setDeviceSelectedListener(b, onBookSelectedListener);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return dataset.size();
+    }
+
+
+    public void add(Book book) {
+        dataset.add(book);
+        notifyDataSetChanged();
+    }
+
+    public void setDataset(List<Book> books) {
+        if (books == null) {
+            dataset = new ArrayList<>();
+        } else {
+            dataset = books;
+        }
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        dataset.clear();
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        View cardView;
 
         TextView title;
         TextView description;
@@ -61,10 +91,21 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            cardView = itemView.findViewById(R.id.card_view);
+
             title = (TextView) itemView.findViewById(R.id.card_title);
             description = (TextView) itemView.findViewById(R.id.card_text);
             imageBook = (ImageView) itemView.findViewById(R.id.card_image);
         }
 
+        public void setDeviceSelectedListener(final Book book, final OnBookSelectedListener onBookSelectedListener) {
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBookSelectedListener.onBookSelected(book);
+                }
+            });
+        }
     }
+
 }

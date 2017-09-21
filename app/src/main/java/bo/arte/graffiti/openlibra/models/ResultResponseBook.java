@@ -8,13 +8,13 @@ import java.util.List;
 
 public class ResultResponseBook {
 
-    private List<Categories> records;
+    private List<Book> records;
 
-    public List<Categories> getRecords() {
+    public List<Book> getRecords() {
         return records;
     }
 
-    public void setRecords(List<Categories> records) {
+    public void setRecords(List<Book> records) {
         this.records = records;
     }
 }
